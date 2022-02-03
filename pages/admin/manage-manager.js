@@ -4,7 +4,7 @@ import withManagerSSR from "../../components/withManagerSSR";
 import AdminLayout from "../../components/AdminLayout";
 
 const Home = () => {
-  return <AdminLayout title={`Admin Dashboard`}>Dashboard</AdminLayout>;
+  return <AdminLayout title={`Manage Manager`}>Manager ...</AdminLayout>;
 };
 
 export const getServerSideProps = withManagerSSR(async ({ req, user }) => {

@@ -7,6 +7,7 @@ import { CacheProvider } from "@emotion/react";
 
 import theme from "../components/theme";
 import createEmotionCache from "../components/createEmotionCache";
+import { UserProvider } from "../hooks/useUser";
 import initAuth from "../utils/initAuth";
 
 import "../styles/globals.css";
@@ -27,7 +28,9 @@ export default function App(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <UserProvider user={pageProps.user}>
+          <Component {...pageProps} />
+        </UserProvider>
       </ThemeProvider>
     </CacheProvider>
   );

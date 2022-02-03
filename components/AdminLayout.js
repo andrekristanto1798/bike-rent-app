@@ -14,10 +14,11 @@ import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import useUser from "../hooks/useUser";
+import Button from "@mui/material/Button";
+import Popover from "@mui/material/Popover";
+import useUser from "@/hooks/useUser";
 import Link from "./Link";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
-import { Button, Popover } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -80,8 +81,6 @@ const ADMIN_MENUS = [
 
 export default function AdminLayout({ title, children }) {
   const user = useUser();
-
-  console.log(user.signOut);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 

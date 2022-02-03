@@ -2,9 +2,9 @@ import React from "react";
 import { useRouter } from "next/router";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { Box } from "@mui/material";
-import withManagerSSR from "../../../components/withManagerSSR";
-import AdminLayout from "../../../components/AdminLayout";
-import BikeCard from "../../../components/BikeCard";
+import withManagerSSR from "@/hoc/withManagerSSR";
+import AdminLayout from "@/components/AdminLayout";
+import BikeCard from "@/components/BikeCard";
 
 const storeA = {
   name: "Store A",

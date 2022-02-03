@@ -1,7 +1,7 @@
 import nextConnect from "next-connect";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import withAuthMiddleware from "../../api-lib/withAuthMiddleware";
-import withManagerMiddleware from "../../api-lib/withManagerMiddleware";
+import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
+import withManagerMiddleware from "@/api-lib/withManagerMiddleware";
 
 const handler = nextConnect()
   .use(withAuthMiddleware())

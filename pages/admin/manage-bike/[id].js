@@ -14,10 +14,10 @@ import {
   TableCell,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import withManagerSSR from "../../../components/withManagerSSR";
-import AdminLayout from "../../../components/AdminLayout";
-import GridDescription from "../../../components/GridDescription";
-import Link from "../../../components/Link";
+import withManagerSSR from "@/hoc/withManagerSSR";
+import AdminLayout from "@/components/AdminLayout";
+import GridDescription from "@/components/GridDescription";
+import Link from "@/components/Link";
 
 const storeB = {
   name: "Store B",
@@ -127,7 +127,7 @@ const ManageBikeById = ({ bikeId, bike }) => {
             <TableBody>
               {bike.reservations.map((row) => (
                 <TableRow
-                  key={row.name}
+                  key={row.id}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                     backgroundColor: row.cancelled ? "#CAC9CD" : undefined,

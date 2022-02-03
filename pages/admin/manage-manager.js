@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
-import withManagerSSR from "../../components/withManagerSSR";
-import AdminLayout from "../../components/AdminLayout";
+import withManagerSSR from "@/hoc/withManagerSSR";
+import AdminLayout from "@/components/AdminLayout";
 
 const Home = () => {
   return <AdminLayout title={`Manage Manager`}>Manager ...</AdminLayout>;

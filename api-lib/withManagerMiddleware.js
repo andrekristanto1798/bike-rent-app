@@ -1,4 +1,4 @@
-import db from "../utils/db";
+import db from "@/utils/db";
 
 const withManagerMiddleware = () => async (req, res, next) => {
   try {
@@ -8,7 +8,7 @@ const withManagerMiddleware = () => async (req, res, next) => {
       .get();
     if (snapshot.empty) {
       return res.status(400).json({
-        message: `Unable to find the user role for ${req.user.email}`,
+        error: `Unable to find the user role for ${req.user.email}`,
       });
     }
     const data = [];

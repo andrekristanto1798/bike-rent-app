@@ -1,5 +1,5 @@
 import { verifyIdToken } from "next-firebase-auth";
-import initAuth from "../utils/initAuth";
+import initAuth from "@/utils/initAuth";
 
 initAuth();
 

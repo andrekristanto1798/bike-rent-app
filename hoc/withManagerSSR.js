@@ -1,5 +1,5 @@
 import { AuthAction, withAuthUserTokenSSR } from "next-firebase-auth";
-import getAbsoluteURL from "../utils/getAbsoluteURL";
+import getAbsoluteURL from "@/utils/getAbsoluteURL";
 
 const withManagerSSR = (fn) =>
   withAuthUserTokenSSR({
@@ -21,12 +21,12 @@ const withManagerSSR = (fn) =>
       },
     });
 
-    const { user, message } = await response.json();
+    const { user, error } = await response.json();
 
     if (!response.ok) {
       throw new Error(
         `Data fetching failed with status ${response.status}: ${JSON.stringify(
-          message
+          error
         )}`
       );
     }

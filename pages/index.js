@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
-import Header from "../components/Header";
-import withUserSSR from "../components/withUserSSR";
+import Header from "@/components/Header";
+import withUserSSR from "@/hoc/withUserSSR";
 
 const Home = ({ user }) => {
   const AuthUser = useAuthUser();

@@ -4,8 +4,8 @@ import {
   withAuthUserTokenSSR,
   AuthAction,
 } from "next-firebase-auth";
-import FirebaseAuth from "../components/FirebaseAuth";
-import Header from "../components/Header";
+import FirebaseAuth from "@/components/FirebaseAuth";
+import Header from "@/components/Header";
 
 const styles = {
   content: {

@@ -5,12 +5,12 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
 
-import theme from "../components/theme";
-import createEmotionCache from "../components/createEmotionCache";
-import { UserProvider } from "../hooks/useUser";
-import initAuth from "../utils/initAuth";
+import { UserProvider } from "@/hooks/useUser";
+import createEmotionCache from "@/utils/createEmotionCache";
+import initAuth from "@/utils/initAuth";
+import theme from "@/utils/theme";
 
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
 initAuth();
 

@@ -4,7 +4,7 @@ import getAbsoluteURL from "../utils/getAbsoluteURL";
 const withManagerSSR = (fn) =>
   withAuthUserTokenSSR({
     whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-  })(async ({ AuthUser, req }) => {
+  })(async ({ AuthUser, req, ...rest }) => {
     // Optionally, get other props.
     // You can return anything you'd normally return from
     // `getServerSideProps`, including redirects.
@@ -31,7 +31,7 @@ const withManagerSSR = (fn) =>
       );
     }
 
-    return fn({ req, user: user });
+    return fn({ ...rest, req, user: user });
   });
 
 export default withManagerSSR;

@@ -1,17 +1,30 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
-import { Box } from "@mui/material";
+import { Button, Box } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import withManagerSSR from "@/hoc/withManagerSSR";
 import AdminLayout from "@/components/AdminLayout";
 import BikeCard from "@/components/BikeCard";
 import useEnumTypes from "@/hooks/useEnumTypes";
+import TriggerBikeModal from "@/components/TriggerBikeModal";
 
 const ManageBikeHome = ({ bikes }) => {
   const router = useRouter();
   const enums = useEnumTypes();
   return (
-    <AdminLayout title={`Bikes (${bikes.length} found)`}>
+    <AdminLayout
+      title={
+        <>
+          <span>{`Bikes (${bikes.length} found)`}</span>
+          <TriggerBikeModal onSubmit={console.log}>
+            <Button type="text" sx={{ ml: 1, color: "white" }}>
+              <AddIcon sx={{ mr: 1 }} /> Add New Bike
+            </Button>
+          </TriggerBikeModal>
+        </>
+      }
+    >
       <Box
         display="flex"
         flexDirection="row"

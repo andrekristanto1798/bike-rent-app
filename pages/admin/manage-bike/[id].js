@@ -19,6 +19,7 @@ import AdminLayout from "@/components/AdminLayout";
 import GridDescription from "@/components/GridDescription";
 import Link from "@/components/Link";
 import useEnumTypes from "@/hooks/useEnumTypes";
+import TriggerBikeModal from "@/components/TriggerBikeModal";
 
 const ManageBikeById = ({ bikeId, bike }) => {
   const router = useRouter();
@@ -28,9 +29,15 @@ const ManageBikeById = ({ bikeId, bike }) => {
       title={
         <Box display="flex" alignItems="center">
           {`Bike #${bikeId}`}
-          <IconButton type="text" sx={{ ml: 1, color: "white" }}>
-            <EditIcon />
-          </IconButton>
+          <TriggerBikeModal
+            editMode
+            initialValues={bike}
+            onSubmit={console.log}
+          >
+            <IconButton type="text" sx={{ ml: 1, color: "white" }}>
+              <EditIcon />
+            </IconButton>
+          </TriggerBikeModal>
         </Box>
       }
     >
@@ -49,15 +56,10 @@ const ManageBikeById = ({ bikeId, bike }) => {
         <GridDescription
           equals
           left={<GridDescription left="Color" right={bike.color} />}
-          right={
-            <GridDescription
-              left="Store"
-              right={bike.location?.name + "\n" + bike.location?.address}
-            />
-          }
+          right={<GridDescription left="Store" right={bike.location} />}
         />
       </Box>
-      <Box>
+      <Box sx={{ mt: 2 }}>
         <Typography variant="h4">
           {bike.reservations.length} Reservations
         </Typography>

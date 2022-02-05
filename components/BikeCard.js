@@ -1,22 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Rating,
-  Typography,
-  Tooltip,
-} from "@mui/material";
+import { Card, CardContent, Box, Rating, Typography } from "@mui/material";
 import { LocationOn } from "@mui/icons-material";
 
 function BikeCard({
-  bike: {
-    model,
-    color,
-    rating,
-    totalBookings,
-    location: { name, address },
-  },
+  bike: { model, color, rating, totalBookings, location },
   onClick,
 }) {
   return (
@@ -37,15 +24,13 @@ function BikeCard({
             }}
           ></Box>
         </Typography>
-        <Tooltip sx={{ preWrap: "wrap" }} title={address}>
-          <Typography
-            sx={{ display: "flex", alignItems: "center" }}
-            component="div"
-          >
-            <LocationOn></LocationOn>
-            {name}
-          </Typography>
-        </Tooltip>
+        <Typography
+          sx={{ display: "flex", alignItems: "center" }}
+          component="div"
+        >
+          <LocationOn></LocationOn>
+          {location}
+        </Typography>
         <Typography component="div" color="secondary">
           {totalBookings || 0} bookings made
         </Typography>

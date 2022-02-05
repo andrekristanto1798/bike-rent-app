@@ -42,7 +42,13 @@ const withManagerSSR = (fn) =>
       );
     }
 
-    return fn({ ...rest, req, user: user, token, fetchWithToken });
+    return fn({
+      ...rest,
+      req,
+      user: { ...user, token },
+      token,
+      fetchWithToken,
+    });
   });
 
 export default withManagerSSR;

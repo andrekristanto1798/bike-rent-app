@@ -30,11 +30,17 @@ export const EnumTypesProvider = ({ children }) => {
       setStores(data.stores);
     }
   }, []);
-  useEffect(() => {
+  const fetchEnums = useCallback(() => {
     fetchBikeModels();
     fetchStores();
   }, []);
-  const enumTypes = useMemo(() => ({ models, stores }), [models, stores]);
+  useEffect(() => {
+    fetchEnums();
+  }, []);
+  const enumTypes = useMemo(
+    () => ({ models, stores, fetchEnums }),
+    [models, stores, fetchEnums]
+  );
   return (
     <EnumTypesContext.Provider value={enumTypes}>
       {children}

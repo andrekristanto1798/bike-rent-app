@@ -6,18 +6,18 @@ import AddIcon from "@mui/icons-material/Add";
 import withManagerSSR from "@/hoc/withManagerSSR";
 import AdminLayout from "@/components/AdminLayout";
 import BikeCard from "@/components/BikeCard";
-import useEnumTypes from "@/hooks/useEnumTypes";
 import TriggerBikeModal from "@/components/TriggerBikeModal";
+import useBike from "@/hooks/useBike";
 
-const ManageBikeHome = ({ bikes }) => {
+const ManageBikeHome = () => {
   const router = useRouter();
-  const enums = useEnumTypes();
+  const { bikes, addBike } = useBike();
   return (
     <AdminLayout
       title={
         <>
           <span>{`Bikes (${bikes.length} found)`}</span>
-          <TriggerBikeModal onSubmit={console.log}>
+          <TriggerBikeModal onSubmit={addBike}>
             <Button type="text" sx={{ ml: 1, color: "white" }}>
               <AddIcon sx={{ mr: 1 }} /> Add New Bike
             </Button>

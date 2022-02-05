@@ -5,9 +5,13 @@ const db = getFirestore();
 export const snapshotToArray = (snapshot) => {
   const data = [];
   snapshot.forEach((doc) => {
-    data.push(doc.data());
+    data.push({ id: doc.id, ...doc.data() });
   });
   return data;
 };
+
+export const ModelCollections = () => db.collection("models");
+export const StoreCollections = () => db.collection("stores");
+export const BikeCollections = () => db.collection("bikes");
 
 export default db;

@@ -7,6 +7,7 @@ import { CacheProvider } from "@emotion/react";
 
 import { UserProvider } from "@/hooks/useUser";
 import { EnumTypesProvider } from "@/hooks/useEnumTypes";
+import { BikeProvider } from "@/hooks/useBike";
 import createEmotionCache from "@/utils/createEmotionCache";
 import initAuth from "@/utils/initAuth";
 import theme from "@/utils/theme";
@@ -31,7 +32,9 @@ export default function App(props) {
         <CssBaseline />
         <UserProvider user={pageProps.user}>
           <EnumTypesProvider>
-            <Component {...pageProps} />
+            <BikeProvider initialBikes={pageProps.bikes}>
+              <Component {...pageProps} />
+            </BikeProvider>
           </EnumTypesProvider>
         </UserProvider>
       </ThemeProvider>

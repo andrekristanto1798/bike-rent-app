@@ -1,19 +1,21 @@
 import nextConnect from "next-connect";
 import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
-import { BIKES, RESERVATIONS } from "@/api-lib/mock";
+import { BikeCollections } from "@/utils/db";
+import { RESERVATIONS } from "@/api-lib/mock";
 
 const handler = nextConnect().use(withAuthMiddleware());
 
-handler.get((req, res) => {
-  const bike = BIKES.find((b) => b.id === +req.query.id);
-  if (!bike) {
+handler.get(async (req, res) => {
+  const snapshot = await BikeCollections().doc(req.query.id).get();
+  if (!snapshot.exists) {
     return res
       .status(404)
-      .json({ error: `Bike ${req.query.id} cannot be found!` });
+      .json({ bike: null, error: `Bike ${req.query.id} cannot be found!` });
   }
+  const bike = snapshot.data();
   return res
     .status(200)
-    .json({ ...bike, reservations: RESERVATIONS, isAvailable: true });
+    .json({ bike: { ...bike, reservations: RESERVATIONS } });
 });
 
 export default handler;

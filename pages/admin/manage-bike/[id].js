@@ -18,63 +18,11 @@ import withManagerSSR from "@/hoc/withManagerSSR";
 import AdminLayout from "@/components/AdminLayout";
 import GridDescription from "@/components/GridDescription";
 import Link from "@/components/Link";
-
-const storeB = {
-  name: "Store B",
-  address: "120 Ukansfr St\nUstania, TX, 12399",
-};
-const mockBikeData = {
-  id: 8,
-  model: "Royal Enfield Meteor 350",
-  rating: 4,
-  location: storeB,
-  color: "red",
-  reservations: [
-    {
-      id: 1,
-      user: { id: 1, name: "ABC" },
-      date: "2021-01-01",
-      createdAt: "2021-01-01T00:12:00Z",
-      duration: 2,
-      cancelled: false,
-    },
-    {
-      id: 2,
-      user: { id: 1, name: "DEF" },
-      date: "2021-01-03",
-      createdAt: "2021-01-03T00:12:00Z",
-      duration: 1,
-      cancelled: true,
-    },
-    {
-      id: 3,
-      user: { id: 1, name: "HIJ" },
-      date: "2021-01-03",
-      createdAt: "2021-01-03T00:12:00Z",
-      duration: 1,
-      cancelled: false,
-    },
-    {
-      id: 4,
-      user: { id: 1, name: "KLM" },
-      date: "2021-01-10",
-      createdAt: "2021-01-10T00:12:00Z",
-      duration: 1,
-      cancelled: false,
-    },
-    {
-      id: 5,
-      user: { id: 1, name: "NOP" },
-      date: "2021-01-12",
-      createdAt: "2021-01-12T00:12:00Z",
-      duration: 1,
-      cancelled: false,
-    },
-  ],
-};
+import useEnumTypes from "@/hooks/useEnumTypes";
 
 const ManageBikeById = ({ bikeId, bike }) => {
   const router = useRouter();
+  const enums = useEnumTypes();
   return (
     <AdminLayout
       title={
@@ -158,9 +106,10 @@ const ManageBikeById = ({ bikeId, bike }) => {
 };
 
 export const getServerSideProps = withManagerSSR(
-  async ({ req, user, query }) => {
+  async ({ req, user, query, fetchWithToken }) => {
+    const bike = await fetchWithToken(`/api/bikes/${query.id}`);
     return {
-      props: { user, bikeId: query.id, bike: mockBikeData },
+      props: { user, bikeId: query.id, bike },
     };
   }
 );

@@ -1,12 +1,29 @@
+import React, { useCallback, useContext, useMemo } from "react";
 import { useAuthUser } from "next-firebase-auth";
-import React, { useContext } from "react";
 
 const UserContext = React.createContext(null);
 
 function useUser() {
   const user = useContext(UserContext);
-  const { signOut } = useAuthUser();
-  return { ...user, signOut };
+  const { getIdToken, signOut } = useAuthUser();
+  const fetchWithToken = useCallback(
+    async (url, options) => {
+      const token = await getIdToken();
+      const resp = await fetch(url, {
+        ...options,
+        headers: {
+          ...options?.headers,
+          Authorization: token,
+        },
+      });
+      return resp.json();
+    },
+    [getIdToken]
+  );
+  return useMemo(
+    () => ({ ...user, signOut, fetchWithToken }),
+    [user, signOut, fetchWithToken]
+  );
 }
 
 export const UserProvider = ({ user, children }) => {

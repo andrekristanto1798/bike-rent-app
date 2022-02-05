@@ -21,6 +21,17 @@ const withManagerSSR = (fn) =>
       },
     });
 
+    const fetchWithToken = async (url, options = {}) => {
+      const resp = await fetch(getAbsoluteURL(url, req), {
+        ...rest,
+        headers: {
+          ...options?.headers,
+          Authorization: token,
+        },
+      });
+      return resp.json();
+    };
+
     const { user, error } = await response.json();
 
     if (!response.ok) {
@@ -31,7 +42,7 @@ const withManagerSSR = (fn) =>
       );
     }
 
-    return fn({ ...rest, req, user: user });
+    return fn({ ...rest, req, user: user, token, fetchWithToken });
   });
 
 export default withManagerSSR;

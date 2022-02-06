@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
 
-import { UserProvider } from "@/hooks/useUser";
+import { CurrentUserProvider } from "@/hooks/useCurrentUser";
 import { EnumTypesProvider } from "@/hooks/useEnumTypes";
 import { BikeProvider } from "@/hooks/useBike";
 import createEmotionCache from "@/utils/createEmotionCache";
@@ -30,13 +30,13 @@ export default function App(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <UserProvider user={pageProps.user}>
+        <CurrentUserProvider user={pageProps.user}>
           <EnumTypesProvider>
             <BikeProvider initialBikes={pageProps.bikes}>
               <Component {...pageProps} />
             </BikeProvider>
           </EnumTypesProvider>
-        </UserProvider>
+        </CurrentUserProvider>
       </ThemeProvider>
     </CacheProvider>
   );

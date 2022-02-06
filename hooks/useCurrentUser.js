@@ -7,10 +7,10 @@ import React, {
 } from "react";
 import { useAuthUser } from "next-firebase-auth";
 
-const UserContext = React.createContext(null);
+const CurrentUserContext = React.createContext(null);
 
-function useUser() {
-  const user = useContext(UserContext);
+function useCurrentUser() {
+  const user = useContext(CurrentUserContext);
   const { signOut, getIdToken } = useAuthUser();
   const getIdTokenRef = useRef(getIdToken);
   const fetchWithToken = useCallback(async (url, options) => {
@@ -36,8 +36,12 @@ function useUser() {
   );
 }
 
-export const UserProvider = ({ user, children }) => {
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+export const CurrentUserProvider = ({ user, children }) => {
+  return (
+    <CurrentUserContext.Provider value={user}>
+      {children}
+    </CurrentUserContext.Provider>
+  );
 };
 
-export default useUser;
+export default useCurrentUser;

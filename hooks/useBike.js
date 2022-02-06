@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import useEnumTypes from "./useEnumTypes";
-import useUser from "./useUser";
+import useCurrentUser from "./useCurrentUser";
 
 const BikeContext = React.createContext(null);
 
@@ -16,7 +16,7 @@ function useBike() {
 }
 
 export const BikeProvider = ({ initialBikes, children }) => {
-  const { fetchWithToken } = useUser();
+  const { fetchWithToken } = useCurrentUser();
   const { fetchEnums } = useEnumTypes();
   const [bikes, setBikes] = useState(initialBikes || []);
   const fetchBikes = useCallback(async () => {

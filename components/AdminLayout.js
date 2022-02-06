@@ -15,7 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
-import useUser from "@/hooks/useUser";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import Link from "./Link";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 
@@ -79,7 +79,7 @@ const ADMIN_MENUS = [
 ];
 
 export default function AdminLayout({ title, children }) {
-  const user = useUser();
+  const user = useCurrentUser();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 

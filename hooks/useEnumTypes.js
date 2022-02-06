@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import useUser from "./useUser";
+import useCurrentUser from "./useCurrentUser";
 
 const EnumTypesContext = React.createContext(null);
 
@@ -15,7 +15,7 @@ function useEnumTypes() {
 }
 
 export const EnumTypesProvider = ({ children }) => {
-  const { fetchWithToken } = useUser();
+  const { fetchWithToken } = useCurrentUser();
   const [models, setModels] = useState([]);
   const [stores, setStores] = useState([]);
   const [colors, setColors] = useState([]);

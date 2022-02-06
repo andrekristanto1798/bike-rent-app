@@ -12,6 +12,7 @@ export const snapshotToArray = (snapshot) => {
 
 export const ModelCollections = () => db.collection("models");
 export const StoreCollections = () => db.collection("stores");
+export const ColorCollections = () => db.collection("colors");
 export const BikeCollections = () => db.collection("bikes");
 
 export default db;

@@ -1,7 +1,8 @@
 import nextConnect from "next-connect";
 import { snapshotToArray, StoreCollections } from "@/utils/db";
+import { onError } from "@/api-lib/ncOnError";
 
-const handler = nextConnect();
+const handler = nextConnect({ onError });
 
 handler.get(async (req, res) => {
   const snapshot = await StoreCollections().get();

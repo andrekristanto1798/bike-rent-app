@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import useEnumTypes from "./useEnumTypes";
 import useUser from "./useUser";
 
@@ -14,9 +20,11 @@ export const BikeProvider = ({ initialBikes, children }) => {
   const { fetchEnums } = useEnumTypes();
   const [bikes, setBikes] = useState(initialBikes || []);
   const fetchBikes = useCallback(async () => {
-    const data = await fetchWithToken("/api/bikes");
-    if (data) {
-      setBikes(data);
+    const { bikes } = await fetchWithToken(
+      `/api/bikes${window.location.search}`
+    );
+    if (bikes) {
+      setBikes(bikes);
     }
   }, []);
   const addBike = useCallback(async (bike) => {
@@ -24,12 +32,15 @@ export const BikeProvider = ({ initialBikes, children }) => {
       method: "POST",
       body: JSON.stringify(bike),
     });
-    fetchEnums();
+    fetchEnums();;
     await fetchBikes();
   }, []);
   const value = useMemo(() => {
-    return { bikes, addBike };
-  }, [bikes, addBike]);
+    return { bikes, addBike, fetchBikes };
+  }, [bikes, addBike, fetchBikes]);
+  useEffect(() => {
+    setBikes(initialBikes);
+  }, [initialBikes]);
   return <BikeContext.Provider value={value}>{children}</BikeContext.Provider>;
 };
 

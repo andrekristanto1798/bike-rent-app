@@ -2,8 +2,9 @@ import nextConnect from "next-connect";
 import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
 import { BikeCollections } from "@/utils/db";
 import { RESERVATIONS } from "@/api-lib/mock";
+import { onError } from "@/api-lib/ncOnError";
 
-const handler = nextConnect().use(withAuthMiddleware());
+const handler = nextConnect({ onError }).use(withAuthMiddleware());
 
 handler.get(async (req, res) => {
   const snapshot = await BikeCollections().doc(req.query.id).get();

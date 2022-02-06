@@ -4,10 +4,11 @@ import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { Button, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import withManagerSSR from "@/hoc/withManagerSSR";
+import useBike from "@/hooks/useBike";
 import AdminLayout from "@/components/AdminLayout";
 import BikeCard from "@/components/BikeCard";
 import TriggerBikeModal from "@/components/TriggerBikeModal";
-import useBike from "@/hooks/useBike";
+import { BikeFilterPopover } from "@/components/BikeFilter";
 
 const ManageBikeHome = () => {
   const router = useRouter();
@@ -18,10 +19,11 @@ const ManageBikeHome = () => {
         <>
           <span>{`Bikes (${bikes.length} found)`}</span>
           <TriggerBikeModal onSubmit={addBike}>
-            <Button type="text" sx={{ ml: 1, color: "white" }}>
+            <Button type="text" sx={{ mx: 1, color: "white" }}>
               <AddIcon sx={{ mr: 1 }} /> Add New Bike
             </Button>
           </TriggerBikeModal>
+          <BikeFilterPopover />
         </>
       }
     >
@@ -50,8 +52,9 @@ const ManageBikeHome = () => {
 };
 
 export const getServerSideProps = withManagerSSR(
-  async ({ user, fetchWithToken }) => {
-    const bikes = await fetchWithToken(`/api/bikes`);
+  async ({ user, query, fetchWithToken }) => {
+    const searchParams = new URLSearchParams(query).toString();
+    const { bikes } = await fetchWithToken(`/api/bikes?${searchParams}`);
     return {
       props: { user, bikes },
     };

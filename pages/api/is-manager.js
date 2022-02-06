@@ -1,8 +1,9 @@
 import nextConnect from "next-connect";
 import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
 import withManagerMiddleware from "@/api-lib/withManagerMiddleware";
+import { onError } from "@/api-lib/ncOnError";
 
-const handler = nextConnect()
+const handler = nextConnect({ onError })
   .use(withAuthMiddleware())
   .use(withManagerMiddleware());
 

@@ -16,6 +16,7 @@ export const ModelCollections = () => db.collection("models");
 export const StoreCollections = () => db.collection("stores");
 export const ColorCollections = () => db.collection("colors");
 export const BikeCollections = () => db.collection("bikes");
+export const ReservationCollections = () => db.collection("reservations");
 
 export const auth = getAuth();
 
@@ -25,5 +26,10 @@ export const createBikeSchema = joi.object({
   color: joi.string().regex(/^#[A-Fa-f0-9]{6}$/),
   isAvailable: joi.bool().required(),
 });
+
+export const RESERVATION_ENUM = {
+  ACTIVE: "ACTIVE",
+  CANCELLED: "CANCELLED",
+};
 
 export default db;

@@ -37,10 +37,16 @@ const withAuthSSR = (managerOnly, fn) =>
       };
     }
 
+    const currentUser = { email: AuthUser.email, token };
+
+    if (AuthUser.claims.isManager) {
+      currentUser.isManager = true;
+    }
+
     return fn({
       ...rest,
       req,
-      currentUser: { email: AuthUser.email, token },
+      currentUser,
       token,
       fetchWithToken,
     });

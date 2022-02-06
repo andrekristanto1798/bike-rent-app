@@ -11,7 +11,10 @@ import {
   StoreCollections,
   ColorCollections,
   createBikeSchema,
+  ReservationCollections,
+  RESERVATION_ENUM,
 } from "@/utils/db";
+import { FieldPath } from "firebase-admin/firestore";
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 
@@ -23,6 +26,8 @@ const getBikeSchema = joi.object({
     .regex(/^#[A-Fa-f0-9]{6}$/)
     .allow("")
     .optional(),
+  startDate: joi.date().optional(),
+  endDate: joi.date().min(joi.ref("startDate")).optional(),
 });
 
 handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
@@ -37,9 +42,34 @@ handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
     query = query.where("color", "==", req.query.color);
   }
   if (!req.user.isManager) {
-    // - show all bikes for manager user
-    // - show available bikes for normal user
+    // ensures for non-manager user to query only valid bikes
     query = query.where("isAvailable", "==", true);
+
+    const { startDate, endDate } = req.query;
+    if (!startDate || !endDate) {
+      return res
+        .status(400)
+        .json({ error: "Start Date and End Date are required!" });
+    }
+    const startTime = new Date(startDate).getTime();
+    const endTime = new Date(endDate).getTime();
+
+    // find bikes which is reserved during [startDate, endDate] period
+    const activeReservations = await ReservationCollections()
+      .where("status", "==", RESERVATION_ENUM.ACTIVE)
+      .where("startTime", "<=", endTime)
+      .get();
+
+    const invalidBikeIds = [];
+    activeReservations.forEach((reservation) => {
+      const data = reservation.data();
+      if (data.endTime >= startTime) {
+        invalidBikeIds.push(data.bikeId);
+      }
+    });
+    if (invalidBikeIds.length) {
+      query = query.where(FieldPath.documentId(), "not-in", invalidBikeIds);
+    }
   }
   const snapshot = await query.get();
   return res.status(200).json({ bikes: snapshotToArray(snapshot) || [] });

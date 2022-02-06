@@ -63,7 +63,7 @@ handler
   .post(validate({ body: createReservationSchema }))
   .post(async (req, res) => {
     const { bikeId, startDate, endDate } = req.body;
-    const userId = req.user.id;
+    const { id: userId, email: userEmail } = req.user;
     const bikeSnapshot = await BikeCollections().doc(bikeId).get();
     if (!bikeSnapshot.exists) {
       return res.status(400).json({
@@ -94,6 +94,7 @@ handler
     await ReservationCollections().add({
       userId,
       bikeId,
+      user: { id: userId, email: userEmail },
       status: RESERVATION_ENUM.ACTIVE,
       startTime: new Date(startDate).getTime(),
       endTime: new Date(endDate).getTime(),

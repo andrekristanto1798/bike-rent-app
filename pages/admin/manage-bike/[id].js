@@ -78,9 +78,8 @@ const ManageBikeById = ({ bikeId, bike }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell>User</TableCell>
-                    <TableCell align="right">Date</TableCell>
-                    <TableCell align="right">Duration</TableCell>
-                    <TableCell align="right">Created At</TableCell>
+                    <TableCell align="right">Start Date</TableCell>
+                    <TableCell align="right">End Date</TableCell>
                     <TableCell align="right">Cancelled</TableCell>
                   </TableRow>
                 </TableHead>
@@ -97,17 +96,14 @@ const ManageBikeById = ({ bikeId, bike }) => {
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        <Link href={`/admin/manage-user/${row.user.id}`}>
-                          {row.user.name}
+                        <Link href={`/admin/manage-user/${row.user?.id}`}>
+                          {row.user?.email}
                         </Link>
                       </TableCell>
-                      <TableCell align="right">{row.date}</TableCell>
-                      <TableCell align="right">{row.duration} Day(s)</TableCell>
+                      <TableCell align="right">{row.startDate}</TableCell>
+                      <TableCell align="right">{row.endDate}</TableCell>
                       <TableCell align="right">
-                        {new Date(row.createdAt).toLocaleString()}
-                      </TableCell>
-                      <TableCell align="right">
-                        {row.cancelled ? "Yes" : "No"}
+                        {row.status === "CANCELLED" ? "Yes" : "No"}
                       </TableCell>
                     </TableRow>
                   ))}

@@ -8,9 +8,10 @@ import {
   ColorCollections,
   createBikeSchema,
   ModelCollections,
+  ReservationCollections,
+  snapshotToArray,
   StoreCollections,
 } from "@/utils/db";
-import { RESERVATIONS } from "@/api-lib/mock";
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 
@@ -22,9 +23,17 @@ handler.get(async (req, res) => {
       .json({ bike: null, error: `Bike ${req.query.id} cannot be found!` });
   }
   const bike = snapshot.data();
-  return res
-    .status(200)
-    .json({ bike: { ...bike, reservations: RESERVATIONS } });
+  const reservations = await ReservationCollections()
+    .where("bikeId", "==", req.query.id)
+    .get();
+  return res.status(200).json({
+    bike: {
+      ...bike,
+      reservations: snapshotToArray(reservations).sort(
+        (a, b) => b.startTime - a.startTime
+      ),
+    },
+  });
 });
 
 handler

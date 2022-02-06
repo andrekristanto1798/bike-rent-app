@@ -16,7 +16,7 @@ function useUser() {
   const fetchWithToken = useCallback(async (url, options) => {
     // for first render, fallback to user.token since
     // AuthUser.getIdToken => null
-    const token = (await getIdTokenRef.current()) || user.token;
+    const token = (await getIdTokenRef.current()) || user?.token;
     const resp = await fetch(url, {
       ...options,
       headers: {

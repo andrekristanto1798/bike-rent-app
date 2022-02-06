@@ -4,6 +4,8 @@ export function formatYYYYMMDD(date) {
     day = "" + d.getDate(),
     year = d.getFullYear();
 
+  if (!d.getTime()) return "";
+
   if (month.length < 2) month = "0" + month;
   if (day.length < 2) day = "0" + day;
 

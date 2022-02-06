@@ -10,6 +10,7 @@ import {
   ModelCollections,
   StoreCollections,
   ColorCollections,
+  createBikeSchema,
 } from "@/utils/db";
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
@@ -38,7 +39,6 @@ handler
     if (req.query.color) {
       query = query.where("color", "==", req.query.color);
     }
-    console.log(req.user.isManager);
     if (!req.user.isManager) {
       // - show all bikes for manager user
       // - show available bikes for normal user
@@ -47,13 +47,6 @@ handler
     const snapshot = await query.get();
     return res.status(200).json({ bikes: snapshotToArray(snapshot) || [] });
   });
-
-const createBikeSchema = joi.object({
-  model: joi.string().required(),
-  location: joi.string().required(),
-  color: joi.string().regex(/^#[A-Fa-f0-9]{6}$/),
-  isAvailable: joi.bool().required(),
-});
 
 handler
   .post(withManagerMiddleware())

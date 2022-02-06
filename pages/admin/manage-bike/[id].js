@@ -18,12 +18,12 @@ import withManagerSSR from "@/hoc/withManagerSSR";
 import AdminLayout from "@/components/AdminLayout";
 import GridDescription from "@/components/GridDescription";
 import Link from "@/components/Link";
-import useEnumTypes from "@/hooks/useEnumTypes";
 import TriggerBikeModal from "@/components/TriggerBikeModal";
+import useBike from "@/hooks/useBike";
 
 const ManageBikeById = ({ bikeId, bike }) => {
   const router = useRouter();
-  const enums = useEnumTypes();
+  const { updateBike } = useBike();
   return (
     <AdminLayout
       title={
@@ -33,7 +33,10 @@ const ManageBikeById = ({ bikeId, bike }) => {
             <TriggerBikeModal
               editMode
               initialValues={bike}
-              onSubmit={console.log}
+              onSubmit={(bike) => {
+                updateBike(bikeId, bike);
+                router.replace(router.asPath);
+              }}
             >
               <IconButton type="text" sx={{ ml: 1, color: "white" }}>
                 <EditIcon />
@@ -56,7 +59,7 @@ const ManageBikeById = ({ bikeId, bike }) => {
               right={
                 <GridDescription
                   left="Available"
-                  right={bike.available ? "Yes" : "No"}
+                  right={bike.isAvailable ? "Yes" : "No"}
                 />
               }
             />

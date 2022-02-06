@@ -32,14 +32,21 @@ export const BikeProvider = ({ initialBikes, children }) => {
       method: "POST",
       body: JSON.stringify(bike),
     });
-    fetchEnums();;
+    fetchEnums();
     await fetchBikes();
   }, []);
+  const updateBike = useCallback(async (bikeId, bike) => {
+    await fetchWithToken(`/api/bikes/${bikeId}`, {
+      method: "PUT",
+      body: JSON.stringify(bike),
+    });
+    fetchEnums();
+  }, []);
   const value = useMemo(() => {
-    return { bikes, addBike, fetchBikes };
-  }, [bikes, addBike, fetchBikes]);
+    return { bikes, addBike, updateBike, fetchBikes };
+  }, [bikes, addBike, updateBike, fetchBikes]);
   useEffect(() => {
-    setBikes(initialBikes);
+    setBikes(initialBikes || []);
   }, [initialBikes]);
   return <BikeContext.Provider value={value}>{children}</BikeContext.Provider>;
 };

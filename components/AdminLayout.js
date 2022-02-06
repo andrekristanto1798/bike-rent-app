@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler";
 import PersonIcon from "@mui/icons-material/Person";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -71,11 +70,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const ADMIN_MENUS = [
   { icon: <TwoWheelerIcon />, text: "Bikes", href: "/admin/manage-bike" },
   { icon: <PersonIcon />, text: "Users", href: "/admin/manage-user" },
-  {
-    icon: <SupervisedUserCircleIcon />,
-    text: "Managers",
-    href: "/admin/manage-manager",
-  },
 ];
 
 export default function AdminLayout({ title, children }) {

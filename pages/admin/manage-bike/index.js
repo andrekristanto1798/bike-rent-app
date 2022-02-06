@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { Button, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import withManagerSSR from "@/hoc/withManagerSSR";
+import withAuthSSR from "@/hoc/withAuthSSR";
 import useBike from "@/hooks/useBike";
 import AdminLayout from "@/components/AdminLayout";
 import BikeCard from "@/components/BikeCard";
@@ -51,12 +51,13 @@ const ManageBikeHome = () => {
   );
 };
 
-export const getServerSideProps = withManagerSSR(
-  async ({ user, query, fetchWithToken }) => {
+export const getServerSideProps = withAuthSSR(
+  true,
+  async ({ currentUser, query, fetchWithToken }) => {
     const searchParams = new URLSearchParams(query).toString();
     const { bikes } = await fetchWithToken(`/api/bikes?${searchParams}`);
     return {
-      props: { user, bikes },
+      props: { currentUser, bikes },
     };
   }
 );

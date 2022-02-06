@@ -1,7 +1,7 @@
 import { AuthAction, withAuthUserTokenSSR } from "next-firebase-auth";
 import getAbsoluteURL from "@/utils/getAbsoluteURL";
 
-const withManagerSSR = (fn) =>
+const withAuthSSR = (managerOnly, fn) =>
   withAuthUserTokenSSR({
     whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
   })(async ({ AuthUser, req, ...rest }) => {
@@ -13,13 +13,6 @@ const withManagerSSR = (fn) =>
     // Note: you shouldn't typically fetch your own API routes from within
     // `getServerSideProps`. This is for example purposes only.
     // https://github.com/gladly-team/next-firebase-auth/issues/264
-    const endpoint = getAbsoluteURL("/api/is-manager", req);
-    const response = await fetch(endpoint, {
-      method: "GET",
-      headers: {
-        Authorization: token,
-      },
-    });
 
     const fetchWithToken = async (url, options = {}) => {
       const resp = await fetch(getAbsoluteURL(url, req), {
@@ -32,23 +25,25 @@ const withManagerSSR = (fn) =>
       return resp.json();
     };
 
-    const { user, error } = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        `Data fetching failed with status ${response.status}: ${JSON.stringify(
-          error
-        )}`
+    if (managerOnly && !AuthUser.claims.isManager) {
+      console.error(
+        `[withAuthSSR] Current user does not have valid 'isManager' claims`
       );
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
     }
 
     return fn({
       ...rest,
       req,
-      user: { ...user, token },
+      currentUser: { email: AuthUser.email, token },
       token,
       fetchWithToken,
     });
   });
 
-export default withManagerSSR;
+export default withAuthSSR;

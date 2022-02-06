@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "pretty": "pretty-quick --staged",
     "deploy": "vercel --prod",
     "prepare": "husky install"
   },
@@ -25,6 +26,7 @@
     "next-connect": "^0.11.0",
     "next-firebase-auth": "^0.14.1-alpha.0",
     "next-joi": "^2.2.1",
+    "notistack": "^2.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-firebaseui": "^5.0.2"

@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import withManagerSSR from "@/hoc/withManagerSSR";
+import withAuthSSR from "@/hoc/withAuthSSR";
 import AdminLayout from "@/components/AdminLayout";
 import GridDescription from "@/components/GridDescription";
 import Link from "@/components/Link";
@@ -121,11 +121,12 @@ const ManageBikeById = ({ bikeId, bike }) => {
   );
 };
 
-export const getServerSideProps = withManagerSSR(
-  async ({ req, user, query, fetchWithToken }) => {
+export const getServerSideProps = withAuthSSR(
+  true,
+  async ({ currentUser, query, fetchWithToken }) => {
     const { bike } = await fetchWithToken(`/api/bikes/${query.id}`);
     return {
-      props: { user, bikeId: query.id, bike },
+      props: { currentUser, bikeId: query.id, bike },
     };
   }
 );

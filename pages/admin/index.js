@@ -1,15 +1,15 @@
 import React from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
-import withManagerSSR from "@/hoc/withManagerSSR";
+import withAuthSSR from "@/hoc/withAuthSSR";
 import AdminLayout from "@/components/AdminLayout";
 
 const Home = () => {
   return <AdminLayout title={`Admin Dashboard`}>Dashboard</AdminLayout>;
 };
 
-export const getServerSideProps = withManagerSSR(async ({ user }) => {
+export const getServerSideProps = withAuthSSR(true, async ({ currentUser }) => {
   return {
-    props: { user },
+    props: { currentUser },
   };
 });
 

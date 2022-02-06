@@ -6,10 +6,12 @@ import React, {
   useRef,
 } from "react";
 import { useAuthUser } from "next-firebase-auth";
+import { useSnackbar } from "notistack";
 
 const CurrentUserContext = React.createContext(null);
 
 function useCurrentUser() {
+  const { enqueueSnackbar } = useSnackbar();
   const user = useContext(CurrentUserContext);
   const { signOut, getIdToken } = useAuthUser();
   const getIdTokenRef = useRef(getIdToken);
@@ -25,6 +27,18 @@ function useCurrentUser() {
         "Content-Type": "application/json",
       },
     });
+    if (!resp.ok) {
+      let data = {};
+      let errorMsg = "Unable to proceed your request!";
+      try {
+        data = await resp.json();
+        errorMsg = data.error;
+      } catch {
+        // do nothing
+      }
+      enqueueSnackbar(errorMsg, { variant: "error" });
+      return Promise.reject(errorMsg);
+    }
     return resp.json();
   }, []);
   useEffect(() => {

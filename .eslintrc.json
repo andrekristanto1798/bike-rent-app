@@ -1,4 +1,11 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "extends": ["next/core-web-vitals", "eslint:recommended", "prettier"],
+  "globals": {
+    "Promise": true
+  },
   "ignorePatterns": [".lintstagedrc.js"]
 }

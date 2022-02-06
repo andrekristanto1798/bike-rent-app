@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthAction, useAuthUser, withAuthUser } from "next-firebase-auth";
 import Header from "@/components/Header";
-import withUserSSR from "@/hoc/withUserSSR";
+import withAuthSSR from "@/hoc/withAuthSSR";
 
 const Home = ({ user }) => {
   const AuthUser = useAuthUser();
@@ -13,9 +13,9 @@ const Home = ({ user }) => {
   );
 };
 
-export const getServerSideProps = withUserSSR(({ user }) => {
+export const getServerSideProps = withAuthSSR(false, ({ currentUser }) => {
   return {
-    props: { user },
+    props: { currentUser },
   };
 });
 

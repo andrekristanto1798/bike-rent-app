@@ -1,5 +1,6 @@
 import joi from "joi";
 import { getFirestore } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
 
 const db = getFirestore();
 
@@ -15,6 +16,8 @@ export const ModelCollections = () => db.collection("models");
 export const StoreCollections = () => db.collection("stores");
 export const ColorCollections = () => db.collection("colors");
 export const BikeCollections = () => db.collection("bikes");
+
+export const auth = getAuth();
 
 export const createBikeSchema = joi.object({
   model: joi.string().required(),

@@ -16,6 +16,7 @@ const withAuthMiddleware = () => async (req, res, next) => {
     // user: {id, email, emailVerified, phoneNumber, displayName, photoURL}
     const user = await verifyIdToken(token);
     req.user = user;
+    req.user.isManager = user.claims?.isManager || false;
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);

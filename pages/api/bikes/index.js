@@ -25,28 +25,25 @@ const getBikeSchema = joi.object({
     .optional(),
 });
 
-handler
-  .get(withManagerMiddleware({ enforce: false }))
-  .get(validate({ query: getBikeSchema }))
-  .get(async (req, res) => {
-    let query = BikeCollections();
-    if (req.query.model) {
-      query = query.where("model", "==", req.query.model);
-    }
-    if (req.query.location) {
-      query = query.where("location", "==", req.query.location);
-    }
-    if (req.query.color) {
-      query = query.where("color", "==", req.query.color);
-    }
-    if (!req.user.isManager) {
-      // - show all bikes for manager user
-      // - show available bikes for normal user
-      query = query.where("isAvailable", "==", true);
-    }
-    const snapshot = await query.get();
-    return res.status(200).json({ bikes: snapshotToArray(snapshot) || [] });
-  });
+handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
+  let query = BikeCollections();
+  if (req.query.model) {
+    query = query.where("model", "==", req.query.model);
+  }
+  if (req.query.location) {
+    query = query.where("location", "==", req.query.location);
+  }
+  if (req.query.color) {
+    query = query.where("color", "==", req.query.color);
+  }
+  if (!req.user.isManager) {
+    // - show all bikes for manager user
+    // - show available bikes for normal user
+    query = query.where("isAvailable", "==", true);
+  }
+  const snapshot = await query.get();
+  return res.status(200).json({ bikes: snapshotToArray(snapshot) || [] });
+});
 
 handler
   .post(withManagerMiddleware())

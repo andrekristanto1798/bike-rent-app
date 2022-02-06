@@ -10,12 +10,14 @@ const handler = nextConnect({ onError })
 
 handler.post((req, res) => {
   const auth = getAuth();
-  createUserWithEmailAndPassword(auth, email, password)
+  createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
     .then((userCredential) => {
       console.log("admin-created", { userCredential });
+      return res.status(200).json({ ok: true });
     })
     .catch((error) => {
       console.error("unable to create admin", { error });
+      return res.status(400).json({ error });
     });
 });
 

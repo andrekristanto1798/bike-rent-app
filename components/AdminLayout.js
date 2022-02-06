@@ -1,6 +1,5 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -159,7 +158,7 @@ export default function AdminLayout({ title, children }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {ADMIN_MENUS.map(({ href, text, icon }, index) => (
+          {ADMIN_MENUS.map(({ href, text, icon }) => (
             <Link noLinkStyle key={text} href={href}>
               <ListItem button>
                 <ListItemIcon>{icon}</ListItemIcon>

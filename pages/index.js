@@ -13,7 +13,7 @@ const Home = ({ user }) => {
   );
 };
 
-export const getServerSideProps = withUserSSR(({ req, user }) => {
+export const getServerSideProps = withUserSSR(({ user }) => {
   return {
     props: { user },
   };

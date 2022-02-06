@@ -1,6 +1,4 @@
 import React from "react";
-import { Button, Typography } from "@mui/material";
-import Link from "./Link";
 
 const styles = {
   container: {
@@ -19,7 +17,7 @@ const styles = {
   },
 };
 
-const Header = ({ email, signOut }) => (
+const Header = () => (
   <div style={styles.container}>
     <div style={styles.versionsContainer}>
       <h1 className="text-3xl font-bold">Bike Rent App</h1>

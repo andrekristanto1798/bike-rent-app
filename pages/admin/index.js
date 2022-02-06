@@ -7,7 +7,7 @@ const Home = () => {
   return <AdminLayout title={`Admin Dashboard`}>Dashboard</AdminLayout>;
 };
 
-export const getServerSideProps = withManagerSSR(async ({ req, user }) => {
+export const getServerSideProps = withManagerSSR(async ({ user }) => {
   return {
     props: { user },
   };

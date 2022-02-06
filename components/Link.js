@@ -16,6 +16,7 @@ export const NextLinkComposed = React.forwardRef(function NextLinkComposed(
   const {
     to,
     linkAs,
+    // eslint-disable-next-line no-unused-vars
     href,
     replace,
     scroll,
@@ -62,6 +63,7 @@ const Link = React.forwardRef(function Link(props, ref) {
     className: classNameProps,
     href,
     noLinkStyle,
+    // eslint-disable-next-line no-unused-vars
     role, // Link don't have roles.
     ...other
   } = props;

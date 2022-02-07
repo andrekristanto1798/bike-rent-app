@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { useRouter } from "next/router";
-import Header from "@/components/Header";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateRangePicker from "@mui/lab/DateRangePicker";
+import FilterIcon from "@mui/icons-material/FilterAlt";
 import withAuthSSR from "@/hoc/withAuthSSR";
 import { formatYYYYMMDD } from "@/utils/date";
 import useBike from "@/hooks/useBike";
+import UserLayout from "@/components/UserLayout";
+import BikeCard from "@/components/BikeCard";
+import { BikeFilterPopover } from "@/components/BikeFilter";
 
 const Home = ({ startDate, endDate }) => {
   const { bikes } = useBike();
@@ -18,10 +25,69 @@ const Home = ({ startDate, endDate }) => {
     }
   }, [router, startDate, endDate]);
   return (
-    <div>
-      <Header />
-      <pre>{JSON.stringify({ startDate, endDate, bikes }, null, 2)}</pre>
-    </div>
+    <UserLayout>
+      <Box display="flex" flexDirection="row" gap={2} sx={{ my: 2 }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateRangePicker
+            startText="From"
+            endText="To"
+            value={[new Date(startDate), new Date(endDate)]}
+            onChange={([newStartDate, newEndDate]) => {
+              if (!newStartDate || !newEndDate) return;
+              router.replace({
+                query: {
+                  ...router.query,
+                  startDate: formatYYYYMMDD(newStartDate),
+                  endDate: formatYYYYMMDD(newEndDate),
+                },
+              });
+            }}
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <TextField sx={{ width: "120px" }} {...startProps} />
+                <Box sx={{ mx: 2 }}> to </Box>
+                <TextField sx={{ width: "120px" }} {...endProps} />
+              </React.Fragment>
+            )}
+          />
+        </LocalizationProvider>
+        <BikeFilterPopover
+          trigger={
+            <Button sx={{ padding: 0, minWidth: "32px" }}>
+              <FilterIcon />
+            </Button>
+          }
+        />
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="row"
+        flexWrap="wrap"
+        justifyContent="center"
+        gap={2}
+        rowGap={2}
+      >
+        {bikes.length === 0 && (
+          <Typography>
+            We are sorry. Currently there are no bikes available for
+            reservations! Please try update your search.
+          </Typography>
+        )}
+        {bikes.map((bike) => {
+          return (
+            <BikeCard
+              key={bike.id}
+              bike={bike}
+              onClick={() => {
+                router.push(
+                  `/rent-bike/${bike.id}?startDate=${startDate}&endDate=${endDate}`
+                );
+              }}
+            />
+          );
+        })}
+      </Box>
+    </UserLayout>
   );
 };
 
@@ -32,6 +98,7 @@ export const getServerSideProps = withAuthSSR(
       return { redirect: { destination: "/admin", permanent: false } };
     }
     const userQuery = {
+      ...query,
       startDate: formatYYYYMMDD(query.startDate) || formatYYYYMMDD(new Date()),
       endDate: formatYYYYMMDD(query.endDate) || formatYYYYMMDD(new Date()),
     };

@@ -10,6 +10,7 @@ import {
   auth,
   RESERVATION_ENUM,
 } from "@/utils/db";
+import { formatYYYYMMDD } from "@/utils/date";
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 
@@ -20,8 +21,39 @@ const getReservationSchema = joi.object({
 
 const createReservationSchema = joi.object({
   bikeId: joi.string().required(),
-  startDate: joi.date().required(),
-  endDate: joi.date().min(joi.ref("startDate")).required(),
+  startDate: joi
+    .date()
+    .greater(Date.now())
+    .required()
+    .error((errors) => {
+      errors.forEach((err) => {
+        const tmr = formatYYYYMMDD(Date.now() + 1);
+        switch (err.code) {
+          case "date.greater":
+            err.message = `Earliest start date for reservation is ${tmr}`;
+            break;
+          default:
+            break;
+        }
+      });
+      return errors;
+    }),
+  endDate: joi
+    .date()
+    .min(joi.ref("startDate"))
+    .required()
+    .error((errors) => {
+      errors.forEach((err) => {
+        switch (err.code) {
+          case "date.min":
+            err.message = `End date for reservation cannot be lower than the start date`;
+            break;
+          default:
+            break;
+        }
+      });
+      return errors;
+    }),
 });
 
 // GET /reservations?bikeId={bikeId}&userId={userId}
@@ -54,7 +86,20 @@ handler.get(validate({ query: getReservationSchema })).get(async (req, res) => {
 
   const snapshot = await query.get();
 
-  return res.status(200).json({ reservations: snapshotToArray(snapshot) });
+  let reservations = snapshotToArray(snapshot);
+
+  if (!req.user.isManager) {
+    // normal user needs bike details
+    const promises = reservations.map(async (reservation) => {
+      const bike = await BikeCollections().doc(reservation.bikeId).get();
+      return { ...reservation, bike: bike.data() };
+    });
+    reservations = await Promise.all(promises);
+  }
+
+  reservations = reservations.sort((a, b) => b.startTime - a.startTime);
+
+  return res.status(200).json({ reservations });
 });
 
 // POST /reservations

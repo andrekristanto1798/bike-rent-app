@@ -18,7 +18,13 @@ handler.post(async (req, res) => {
       error: `Reservation ${reservationId} cannot be found!`,
     });
   }
-  const { userId } = reservationSnapshot.data();
+  const { userId, startTime } = reservationSnapshot.data();
+
+  if (startTime <= Date.now()) {
+    return res.status(400).json({
+      error: `Reservation ${reservationId} is already past the start date. It cannot be cancelled!`,
+    });
+  }
   if (!req.user.isManager && userId !== requestUserId) {
     // only allow non-manager to cancel his own reservation
     return res.status(400).json({
@@ -27,8 +33,8 @@ handler.post(async (req, res) => {
   }
 
   await ReservationCollections()
-    .doc()
-    .set({ status: RESERVATION_ENUM.CANCELLED });
+    .doc(reservationId)
+    .set({ status: RESERVATION_ENUM.CANCELLED }, { merge: true });
 
   return res.status(200).json({ ok: true });
 });

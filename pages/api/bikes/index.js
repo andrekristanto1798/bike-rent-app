@@ -72,7 +72,19 @@ handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
     }
   }
   const snapshot = await query.get();
-  return res.status(200).json({ bikes: snapshotToArray(snapshot) || [] });
+  let bikes = snapshotToArray(snapshot);
+  if (req.user.isManager) {
+    // populate totalBookings number
+    const promises = bikes.map(async (bike) => {
+      const reservations = await ReservationCollections()
+        .where("bikeId", "==", bike.id)
+        .get();
+      return { ...bike, totalBookings: reservations.size };
+    });
+    bikes = await Promise.all(promises);
+  }
+  // TODO: populate rating value
+  return res.status(200).json({ bikes });
 });
 
 handler

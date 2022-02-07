@@ -1,6 +1,7 @@
 import React from "react";
-import { Card, CardContent, Box, Rating, Typography } from "@mui/material";
+import { Card, CardContent, Rating, Typography } from "@mui/material";
 import { LocationOn } from "@mui/icons-material";
+import DotColor from "./DotColor";
 
 function BikeCard({
   bike: { model, color, rating, totalBookings, location, isAvailable },
@@ -20,16 +21,7 @@ function BikeCard({
           sx={{ display: "flex", alignItems: "center" }}
           component="div"
         >
-          {model}
-          <Box
-            sx={{
-              width: 12,
-              height: 12,
-              ml: 2,
-              borderRadius: "50%",
-              backgroundColor: color,
-            }}
-          ></Box>
+          {model} <DotColor color={color} ml={2} />
         </Typography>
         <Typography
           sx={{ display: "flex", alignItems: "center" }}

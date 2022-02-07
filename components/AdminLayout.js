@@ -12,11 +12,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Button from "@mui/material/Button";
-import Popover from "@mui/material/Popover";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import Link from "./Link";
-import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
+import UserAvatarMenu from "./UserAvatarMenu";
 
 const drawerWidth = 240;
 
@@ -75,19 +73,6 @@ const ADMIN_MENUS = [
 export default function AdminLayout({ title, children }) {
   const user = useCurrentUser();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "avatar-popover" : undefined;
-
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" open>
@@ -97,39 +82,11 @@ export default function AdminLayout({ title, children }) {
               {title}
             </Typography>
           </Box>
-          <Box>
-            <BackgroundLetterAvatars
-              aria-describedby={id}
-              sx={{ cursor: "pointer" }}
-              email={user.email}
-              onClick={handleClick}
-            ></BackgroundLetterAvatars>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              PaperProps={{ sx: { mt: 0.5 } }}
-            >
-              <Box sx={{ p: 2 }}>
-                <Typography variant="h6">Manager</Typography>
-                <Typography>{user.email}</Typography>
-                <Button
-                  sx={{ mt: 2 }}
-                  type="button"
-                  variant="contained"
-                  onClick={user.signOut}
-                  fullWidth
-                >
-                  Sign Out
-                </Button>
-              </Box>
-            </Popover>
-          </Box>
+          <UserAvatarMenu
+            email={user.email}
+            role="Manager"
+            onSignOut={user.signOut}
+          />
         </Toolbar>
       </AppBar>
       <Drawer

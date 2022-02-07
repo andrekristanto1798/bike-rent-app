@@ -23,9 +23,15 @@ handler.get(async (req, res) => {
       .json({ bike: null, error: `Bike ${req.query.id} cannot be found!` });
   }
   const bike = snapshot.data();
-  const reservations = await ReservationCollections()
-    .where("bikeId", "==", req.query.id)
-    .get();
+  if (!req.user.isManager && !bike.isAvailable) {
+    return res.status(200).json({ bike: null });
+  }
+  let reservations = [];
+  if (req.user.isManager) {
+    reservations = await ReservationCollections()
+      .where("bikeId", "==", req.query.id)
+      .get();
+  }
   return res.status(200).json({
     bike: {
       ...bike,

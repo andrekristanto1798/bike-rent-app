@@ -14,6 +14,13 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        underline: "none",
+      },
+    },
+  },
 });
 
 export default theme;

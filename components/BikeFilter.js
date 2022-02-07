@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterAlt";
 import useEnumTypes from "@/hooks/useEnumTypes";
+import useIsMobile from "@/hooks/useIsMobile";
 
 function BikeFilter() {
   const { query, replace } = useRouter();
@@ -82,7 +83,18 @@ function BikeFilter() {
   );
 }
 
+const mobileStyle = {
+  position: "fixed",
+  background: "white",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: "auto",
+};
+
 export const BikeFilterPopover = ({ trigger }) => {
+  const isMobile = useIsMobile();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpen = (event) => {
@@ -105,8 +117,18 @@ export const BikeFilterPopover = ({ trigger }) => {
           horizontal: "left",
         }}
       >
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 2, ...(isMobile && mobileStyle) }}>
           <BikeFilter />
+          {isMobile && (
+            <Button
+              variant="contained"
+              sx={{ mt: 2 }}
+              fullWidth
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          )}
         </Box>
       </Popover>
     </>

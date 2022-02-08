@@ -16,8 +16,9 @@ const RentBikeById = ({ bikeId, bike, startDate, endDate }) => {
   const [reserved, setReserved] = useState(false);
   const { fetchWithToken } = useCurrentUser();
   const { enqueueSnackbar } = useSnackbar();
+  const title = bike.model ? `Rent Bike ${bike.model}` : `Rent Bike`;
   return (
-    <UserLayout>
+    <UserLayout title={title}>
       {bike === null && (
         <Typography variant="h6">
           Sorry Your Bike is not available for viewing.&nbsp;

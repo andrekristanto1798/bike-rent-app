@@ -8,7 +8,7 @@ import FirebaseAuth from "@/components/FirebaseAuth";
 import UserLayout from "@/components/UserLayout";
 
 const Auth = () => (
-  <UserLayout>
+  <UserLayout title="Login">
     <FirebaseAuth />
   </UserLayout>
 );

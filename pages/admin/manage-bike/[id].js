@@ -24,17 +24,19 @@ import useBike from "@/hooks/useBike";
 const ManageBikeById = ({ bikeId, bike }) => {
   const router = useRouter();
   const { updateBike } = useBike();
+  const title = bike.model ? `Bike ${bike.model}` : `Bike ${bikeId}`;
   return (
     <AdminLayout
-      title={
+      title={title}
+      header={
         <Box display="flex" alignItems="center">
           {`Bike #${bikeId}`}
           {bike && (
             <TriggerBikeModal
               editMode
               initialValues={bike}
-              onSubmit={(bike) => {
-                updateBike(bikeId, bike);
+              onSubmit={async (bike) => {
+                await updateBike(bikeId, bike);
                 router.replace(router.asPath);
               }}
             >

@@ -4,7 +4,7 @@ import withAuthSSR from "@/hoc/withAuthSSR";
 import AdminLayout from "@/components/AdminLayout";
 
 const Home = () => {
-  return <AdminLayout title={`Admin Dashboard`}>Dashboard</AdminLayout>;
+  return <AdminLayout header={`Admin Dashboard`}>Dashboard</AdminLayout>;
 };
 
 export const getServerSideProps = withAuthSSR(true, async ({ currentUser }) => {

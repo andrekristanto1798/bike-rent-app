@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import UserAvatarMenu from "./UserAvatarMenu";
 import Link from "./Link";
 
-function UserLayout({ children }) {
+function UserLayout({ title, children }) {
   const user = useCurrentUser();
   const { pathname } = useRouter();
   const Wrapper =
@@ -25,6 +26,10 @@ function UserLayout({ children }) {
       minHeight="100vh"
       backgroundColor="whitesmoke"
     >
+      <Head>
+        <title>Renty - {title || "Reserve Your Bike Now"}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {user.email && (
         <Box
           sx={{

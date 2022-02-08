@@ -15,7 +15,8 @@ const ManageBikeHome = () => {
   const { bikes, addBike } = useBike();
   return (
     <AdminLayout
-      title={
+      title="Bike Management"
+      header={
         <>
           <span>{`Bikes (${bikes.length} found)`}</span>
           <TriggerBikeModal onSubmit={addBike}>

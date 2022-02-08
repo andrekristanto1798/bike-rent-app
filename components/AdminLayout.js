@@ -1,4 +1,5 @@
 import * as React from "react";
+import Head from "next/head";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -70,16 +71,20 @@ const ADMIN_MENUS = [
   { icon: <PersonIcon />, text: "Users", href: "/admin/manage-user" },
 ];
 
-export default function AdminLayout({ title, children }) {
+export default function AdminLayout({ title, header, children }) {
   const user = useCurrentUser();
 
   return (
     <Box sx={{ display: "flex" }}>
+      <Head>
+        <title>(Admin) Renty - {title || "Reserve Your Bike Now"}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <AppBar position="fixed" open>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box>
             <Typography variant="h6" noWrap component="div">
-              {title}
+              {header}
             </Typography>
           </Box>
           <UserAvatarMenu

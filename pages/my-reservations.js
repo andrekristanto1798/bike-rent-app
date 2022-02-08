@@ -15,7 +15,7 @@ const Home = ({ reservations }) => {
   const { fetchWithToken } = useCurrentUser();
   const { enqueueSnackbar } = useSnackbar();
   return (
-    <UserLayout>
+    <UserLayout title="My Reservations">
       <Box
         display="flex"
         flexDirection="row"

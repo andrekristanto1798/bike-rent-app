@@ -24,7 +24,8 @@ const ManageUser = () => {
   const { users, addUser, updateUser } = useUserList();
   return (
     <AdminLayout
-      title={
+      title="User Management"
+      header={
         <>
           <span>{`Users (${users.length} found)`}</span>
           <TriggerUserModal onSubmit={addUser}>

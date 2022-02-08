@@ -29,24 +29,27 @@ const getBikeSchema = joi.object({
     .optional(),
   startDate: joi.date().optional(),
   endDate: joi.date().min(joi.ref("startDate")).optional(),
+  minRating: joi.number().min(0).max(5).optional(),
+  maxRating: joi.number().min(0).max(5).optional(),
 });
 
 handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
   let query = BikeCollections();
-  if (req.query.model) {
-    query = query.where("model", "==", req.query.model);
+  const { model, location, color, startDate, endDate, minRating, maxRating } =
+    req.query;
+  if (model) {
+    query = query.where("model", "==", model);
   }
-  if (req.query.location) {
-    query = query.where("location", "==", req.query.location);
+  if (location) {
+    query = query.where("location", "==", location);
   }
-  if (req.query.color) {
-    query = query.where("color", "==", req.query.color);
+  if (color) {
+    query = query.where("color", "==", color);
   }
   if (!req.user.isManager) {
     // ensures for non-manager user to query only valid bikes
     query = query.where("isAvailable", "==", true);
 
-    const { startDate, endDate } = req.query;
     if (!startDate || !endDate) {
       return res
         .status(400)
@@ -90,7 +93,12 @@ handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
       return { ...bike, rating };
     })
   );
-  // TODO: populate rating value
+  if (minRating) {
+    bikes = bikes.filter((d) => d.rating >= minRating);
+  }
+  if (maxRating) {
+    bikes = bikes.filter((d) => d.rating <= maxRating);
+  }
   return res.status(200).json({ bikes });
 });
 

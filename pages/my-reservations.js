@@ -23,6 +23,7 @@ const Home = ({ reservations }) => {
         justifyContent="center"
         gap={2}
         rowGap={2}
+        p={2}
       >
         {reservations.length === 0 && (
           <Typography>You have not made any reservations.</Typography>

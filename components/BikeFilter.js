@@ -4,24 +4,31 @@ import {
   Box,
   Button,
   Popover,
+  Rating,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterAlt";
+import { useSnackbar } from "notistack";
 import useEnumTypes from "@/hooks/useEnumTypes";
 import useIsMobile from "@/hooks/useIsMobile";
 
 function BikeFilter() {
+  const { enqueueSnackbar } = useSnackbar();
   const { query, replace } = useRouter();
   const {
     model: queryModel,
     location: queryLocation,
     color: queryColor,
+    minRating: queryMinRating,
+    maxRating: queryMaxRating,
   } = query;
   const { models, stores, colors } = useEnumTypes();
   const changeQuery = (params) => {
-    replace({ query: { ...query, ...params } });
+    // remove undefined value
+    const nextQuery = JSON.parse(JSON.stringify({ ...query, ...params }));
+    replace({ query: nextQuery });
   };
   return (
     <Box display="flex" flexDirection="column" gap={2}>
@@ -79,6 +86,49 @@ function BikeFilter() {
           );
         })}
       </ToggleButtonGroup>
+      <Typography>
+        Ratings
+        <Button
+          sx={{ ml: 1 }}
+          type="text"
+          onClick={() => {
+            changeQuery({ minRating: undefined, maxRating: undefined });
+          }}
+        >
+          Clear Ratings
+        </Button>
+      </Typography>
+      <Box display="flex" flexDirection="row" gap={2}>
+        <Rating
+          name="min-bike-rating"
+          value={queryMinRating || 0}
+          onChange={(_, value) => {
+            if (queryMaxRating && value > queryMaxRating) {
+              enqueueSnackbar("Please select value lower than the max rating", {
+                key: "min-rating-error",
+                variant: "warning",
+              });
+              return;
+            }
+            changeQuery({ minRating: value });
+          }}
+        />
+        -
+        <Rating
+          name="max-bike-rating"
+          value={queryMaxRating || 0}
+          onChange={(_, value) => {
+            if (queryMinRating && value < queryMinRating) {
+              enqueueSnackbar(
+                "Please select value bigger than the min rating",
+                { key: "max-rating-error", variant: "warning" }
+              );
+              return;
+            }
+            changeQuery({ maxRating: value });
+          }}
+        />
+      </Box>
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { useRouter } from "next/router";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -15,6 +15,7 @@ import { BikeFilterPopover } from "@/components/BikeFilter";
 
 const Home = ({ startDate, endDate }) => {
   const { bikes } = useBike();
+  const [dateRangeValue, setDateRangeValue] = useState([startDate, endDate]);
   const router = useRouter();
   useEffect(() => {
     if (
@@ -31,8 +32,10 @@ const Home = ({ startDate, endDate }) => {
           <DateRangePicker
             startText="From"
             endText="To"
-            value={[new Date(startDate), new Date(endDate)]}
+            value={dateRangeValue}
+            allowSameDateSelection
             onChange={([newStartDate, newEndDate]) => {
+              setDateRangeValue([newStartDate, newEndDate]);
               if (!newStartDate || !newEndDate) return;
               router.replace({
                 query: {
@@ -66,6 +69,7 @@ const Home = ({ startDate, endDate }) => {
         justifyContent="center"
         gap={2}
         rowGap={2}
+        p={2}
       >
         {bikes.length === 0 && (
           <Typography>

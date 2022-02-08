@@ -6,6 +6,7 @@ import DotColor from "./DotColor";
 function BikeCard({
   bike: { model, color, rating, totalBookings, location, isAvailable },
   onClick,
+  hideTotalBookings,
 }) {
   return (
     <Card
@@ -30,10 +31,16 @@ function BikeCard({
           <LocationOn></LocationOn>
           {location}
         </Typography>
-        <Typography component="div" color="secondary">
-          {totalBookings || 0} bookings made {!isAvailable && " (Not Avail.)"}
-        </Typography>
-        <Rating name="bike-rating" value={rating} precision={0.5} readOnly />
+        {!hideTotalBookings && (
+          <Typography component="div" color="secondary">
+            {totalBookings || 0} bookings made {!isAvailable && " (Not Avail.)"}
+          </Typography>
+        )}
+        {rating ? (
+          <Rating name="bike-rating" value={rating} precision={0.5} readOnly />
+        ) : (
+          "No Rating Yet."
+        )}
       </CardContent>
     </Card>
   );

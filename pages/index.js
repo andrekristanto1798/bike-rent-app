@@ -76,6 +76,7 @@ const Home = ({ startDate, endDate }) => {
         {bikes.map((bike) => {
           return (
             <BikeCard
+              hideTotalBookings
               key={bike.id}
               bike={bike}
               onClick={() => {

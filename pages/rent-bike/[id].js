@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { Box, Button, Rating, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useRouter } from "next/router";
 import withAuthSSR from "@/hoc/withAuthSSR";
 import UserLayout from "@/components/UserLayout";
 import Link from "@/components/Link";
@@ -9,8 +10,9 @@ import DotColor from "@/components/DotColor";
 import { formatYYYYMMDD } from "@/utils/date";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
-const RentBikeById = ({ bikeId, bike, startDate, endDate, userRate }) => {
-  const [rating, setRating] = useState(userRate || 0);
+const RentBikeById = ({ bikeId, bike, startDate, endDate }) => {
+  const router = useRouter();
+  const [rating, setRating] = useState(bike.userRating);
   const [reserved, setReserved] = useState(false);
   const { fetchWithToken } = useCurrentUser();
   const { enqueueSnackbar } = useSnackbar();
@@ -25,7 +27,7 @@ const RentBikeById = ({ bikeId, bike, startDate, endDate, userRate }) => {
       <Box>
         <Typography>Model: {bike.model}</Typography>
         <Typography>Location: {bike.location}</Typography>
-        <Typography>Rating: {bike.rating}</Typography>
+        <Typography>Rating: {bike.rating || "No rating yet"}</Typography>
         <Typography sx={{ display: "flex", alignItems: "center" }}>
           Color: <DotColor color={bike.color} ml={1} />
         </Typography>
@@ -66,9 +68,9 @@ const RentBikeById = ({ bikeId, bike, startDate, endDate, userRate }) => {
       )}
       <Box display="flex" flexDirection="column" alignItems="center">
         <Typography>
-          {userRate === false
+          {bike.userRating === false
             ? "You have not rate this bike. Rate now"
-            : `You have rated this bike ${userRate}`}
+            : `You have rated this bike ${bike.userRating}`}
         </Typography>
         <Rating
           name="bike-rating"
@@ -79,11 +81,16 @@ const RentBikeById = ({ bikeId, bike, startDate, endDate, userRate }) => {
           }}
         />
         <Button
-          onClick={() => {
-            // change rate
+          disabled={rating <= 0 || rating === false}
+          onClick={async () => {
+            await fetchWithToken(`/api/bikes/${bikeId}/ratings`, {
+              method: "PUT",
+              body: JSON.stringify({ rating: +rating }),
+            });
+            router.replace(router.asPath);
           }}
         >
-          {userRate === false ? "Rate Bike" : "Change Rate"}
+          {bike.userRating === false ? "Rate Bike" : "Change Rate"}
         </Button>
       </Box>
     </UserLayout>
@@ -110,7 +117,6 @@ export const getServerSideProps = withAuthSSR(
         startDate:
           formatYYYYMMDD(query.startDate) || formatYYYYMMDD(new Date()),
         endDate: formatYYYYMMDD(query.endDate) || formatYYYYMMDD(new Date()),
-        userRate: false,
       },
     };
   }

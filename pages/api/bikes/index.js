@@ -13,6 +13,7 @@ import {
   createBikeSchema,
   ReservationCollections,
   RESERVATION_ENUM,
+  getAvgRating,
 } from "@/utils/db";
 import { FieldPath } from "firebase-admin/firestore";
 
@@ -83,6 +84,12 @@ handler.get(validate({ query: getBikeSchema })).get(async (req, res) => {
     });
     bikes = await Promise.all(promises);
   }
+  bikes = await Promise.all(
+    bikes.map(async (bike) => {
+      const rating = await getAvgRating(bike.id);
+      return { ...bike, rating };
+    })
+  );
   // TODO: populate rating value
   return res.status(200).json({ bikes });
 });

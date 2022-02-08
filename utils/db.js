@@ -17,8 +17,19 @@ export const StoreCollections = () => db.collection("stores");
 export const ColorCollections = () => db.collection("colors");
 export const BikeCollections = () => db.collection("bikes");
 export const ReservationCollections = () => db.collection("reservations");
+export const RatingCollections = (bikeId) =>
+  db.collection("bikes").doc(bikeId).collection("ratings");
 
 export const auth = getAuth();
+
+export const getAvgRating = async (bikeId) => {
+  const ratings = await RatingCollections(bikeId).get();
+  let sumRating = 0;
+  ratings.forEach((docSnapshot) => {
+    sumRating += docSnapshot.data().rating;
+  });
+  return Number((sumRating / ratings.size).toFixed(2));
+};
 
 export const createBikeSchema = joi.object({
   model: joi.string().required(),

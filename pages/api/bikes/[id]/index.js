@@ -7,7 +7,9 @@ import {
   BikeCollections,
   ColorCollections,
   createBikeSchema,
+  getAvgRating,
   ModelCollections,
+  RatingCollections,
   ReservationCollections,
   snapshotToArray,
   StoreCollections,
@@ -32,9 +34,18 @@ handler.get(async (req, res) => {
       .where("bikeId", "==", req.query.id)
       .get();
   }
+  const rating = await getAvgRating(req.query.id);
+  const userRatingSnapshot = await RatingCollections(req.query.id)
+    .doc(req.user.id)
+    .get();
+  const userRating = userRatingSnapshot.exists
+    ? userRatingSnapshot.data().rating
+    : false;
   return res.status(200).json({
     bike: {
       ...bike,
+      rating,
+      userRating,
       reservations: snapshotToArray(reservations).sort(
         (a, b) => b.startTime - a.startTime
       ),
@@ -60,5 +71,16 @@ handler
     ColorCollections().doc(req.body.color).set({ hexColor: req.body.color });
     return res.status(200).json({ ok: true });
   });
+
+handler.delete(withManagerMiddleware()).delete(async (req, res) => {
+  const snapshot = await BikeCollections().doc(req.query.id).get();
+  if (!snapshot.exists) {
+    return res
+      .status(404)
+      .json({ bike: null, error: `Bike ${req.query.id} cannot be found!` });
+  }
+  await BikeCollections().doc(req.query.id).delete();
+  return res.status(200).json({ ok: true });
+});
 
 export default handler;

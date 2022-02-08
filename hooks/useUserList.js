@@ -38,9 +38,15 @@ export const UserProvider = ({ initialUsers, children }) => {
       body: JSON.stringify(user),
     });
   }, []);
+  const removeUser = useCallback(async (userId) => {
+    await fetchWithToken(`/api/users/${userId}`, {
+      method: "DELETE",
+    });
+    await fetchUsers();
+  }, []);
   const value = useMemo(() => {
-    return { users, addUser, updateUser, fetchUsers };
-  }, [users, addUser, updateUser, fetchUsers]);
+    return { users, addUser, updateUser, removeUser, fetchUsers };
+  }, [users, addUser, updateUser, removeUser, fetchUsers]);
   useEffect(() => {
     setUsers(initialUsers || []);
   }, [initialUsers]);

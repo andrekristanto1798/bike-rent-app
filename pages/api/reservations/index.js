@@ -91,13 +91,18 @@ handler.get(validate({ query: getReservationSchema })).get(async (req, res) => {
   if (!req.user.isManager) {
     // normal user needs bike details
     const promises = reservations.map(async (reservation) => {
-      const bike = await BikeCollections().doc(reservation.bikeId).get();
-      return { ...reservation, bike: bike.data() };
+      const bikeSnapshot = await BikeCollections()
+        .doc(reservation.bikeId)
+        .get();
+      if (!bikeSnapshot.exists) return null;
+      return { ...reservation, bike: bikeSnapshot.data() };
     });
     reservations = await Promise.all(promises);
   }
 
-  reservations = reservations.sort((a, b) => b.startTime - a.startTime);
+  reservations = reservations
+    .filter(Boolean) // filter falsy reservation due to deleted bike
+    .sort((a, b) => b.startTime - a.startTime);
 
   return res.status(200).json({ reservations });
 });

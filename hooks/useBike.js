@@ -42,9 +42,15 @@ export const BikeProvider = ({ initialBikes, children }) => {
     });
     fetchEnums();
   }, []);
+  const removeBike = useCallback(async (bikeId) => {
+    await fetchWithToken(`/api/bikes/${bikeId}`, {
+      method: "DELETE",
+    });
+    await fetchBikes();
+  }, []);
   const value = useMemo(() => {
-    return { bikes, addBike, updateBike, fetchBikes };
-  }, [bikes, addBike, updateBike, fetchBikes]);
+    return { bikes, addBike, updateBike, removeBike, fetchBikes };
+  }, [bikes, addBike, updateBike, removeBike, fetchBikes]);
   useEffect(() => {
     setBikes(initialBikes || []);
   }, [initialBikes]);

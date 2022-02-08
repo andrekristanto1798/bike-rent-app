@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useSnackbar } from "notistack";
 import withAuthSSR from "@/hoc/withAuthSSR";
 import AdminLayout from "@/components/AdminLayout";
 import TriggerUserModal from "@/components/TriggerUserModal";
@@ -21,7 +23,8 @@ import useUserList from "@/hooks/useUserList";
 
 const ManageUser = () => {
   const router = useRouter();
-  const { users, addUser, updateUser } = useUserList();
+  const { enqueueSnackbar } = useSnackbar();
+  const { users, addUser, updateUser, removeUser } = useUserList();
   return (
     <AdminLayout
       title="User Management"
@@ -61,7 +64,24 @@ const ManageUser = () => {
                 <TableCell align="right">
                   {row.isManager ? "Yes" : "No"}
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="right" sx={{ display: "flex", gap: 1 }}>
+                  <IconButton
+                    type="text"
+                    onClick={async () => {
+                      const role = row.isManager ? "Manager" : "Basic User";
+                      const alertMsg = `Are you sure to delete ${row.email} (${role}) user?`;
+                      const gonnaDelete = confirm(alertMsg);
+                      if (gonnaDelete) {
+                        await removeUser(row.uid);
+                        enqueueSnackbar(
+                          `${row.email} is removed successfully!`,
+                          { variant: "success" }
+                        );
+                      }
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                   <TriggerUserModal
                     editMode
                     initialValues={row}

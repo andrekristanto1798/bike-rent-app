@@ -25,25 +25,27 @@ function UserLayout({ children }) {
       minHeight="100vh"
       backgroundColor="whitesmoke"
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-        }}
-      >
-        <UserAvatarMenu
-          email={user.email}
-          onSignOut={user.signOut}
-          extraMenus={
-            <Link href="/my-reservations">
-              <Button sx={{ mt: 2 }} type="button" variant="text" fullWidth>
-                My Reservations
-              </Button>
-            </Link>
-          }
-        />
-      </Box>
+      {user.email && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+          }}
+        >
+          <UserAvatarMenu
+            email={user.email}
+            onSignOut={user.signOut}
+            extraMenus={
+              <Link href="/my-reservations">
+                <Button sx={{ mt: 2 }} type="button" variant="text" fullWidth>
+                  My Reservations
+                </Button>
+              </Link>
+            }
+          />
+        </Box>
+      )}
       <Wrapper
         display="flex"
         flexDirection="row"

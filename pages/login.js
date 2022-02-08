@@ -5,24 +5,12 @@ import {
   AuthAction,
 } from "next-firebase-auth";
 import FirebaseAuth from "@/components/FirebaseAuth";
-import Header from "@/components/Header";
-
-const styles = {
-  content: {
-    padding: `8px 32px`,
-  },
-  textContainer: {
-    display: "flex",
-    justifyContent: "center",
-    margin: 16,
-  },
-};
+import UserLayout from "@/components/UserLayout";
 
 const Auth = () => (
-  <div style={styles.content}>
-    <Header />
+  <UserLayout>
     <FirebaseAuth />
-  </div>
+  </UserLayout>
 );
 
 export const getServerSideProps = withAuthUserTokenSSR({

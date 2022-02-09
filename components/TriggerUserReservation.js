@@ -16,12 +16,11 @@ function TriggerUserReservation({ open, userId, email, onClose }) {
 
   const handleClose = () => {
     onClose();
-    setLoading(false);
-    setReservations([]);
   };
 
   useEffect(() => {
     if (open) {
+      setReservations([]);
       setLoading(true);
       fetchWithToken(`/api/reservations?userId=${userId}`).then(
         ({ reservations }) => {

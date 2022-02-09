@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -37,14 +38,14 @@ const FirebaseAuth = () => {
     }
   }, []);
   return (
-    <div>
+    <Box width="100%" p={2}>
       {renderAuth ? (
         <StyledFirebaseAuth
           uiConfig={firebaseAuthConfig}
           firebaseAuth={firebase.auth()}
         />
       ) : null}
-    </div>
+    </Box>
   );
 };
 

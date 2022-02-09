@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { AuthAction, withAuthUser } from "next-firebase-auth";
 import { useRouter } from "next/router";
 import {
@@ -19,12 +19,17 @@ import { useSnackbar } from "notistack";
 import withAuthSSR from "@/hoc/withAuthSSR";
 import AdminLayout from "@/components/AdminLayout";
 import TriggerUserModal from "@/components/TriggerUserModal";
+import TriggerUserReservation from "@/components/TriggerUserReservation";
 import useUserList from "@/hooks/useUserList";
 
 const ManageUser = () => {
   const router = useRouter();
+  const { viewDetail } = router.query;
   const { enqueueSnackbar } = useSnackbar();
   const { users, addUser, updateUser, removeUser } = useUserList();
+  const userViewDetail = useMemo(() => {
+    return users.find((u) => u.uid === viewDetail);
+  }, [users, viewDetail]);
   return (
     <AdminLayout
       title="User Management"
@@ -59,7 +64,14 @@ const ManageUser = () => {
               >
                 <TableCell>{row.email}</TableCell>
                 <TableCell align="right">
-                  {row.reservations?.length || 0} Reservation(s)
+                  <Button
+                    type="text"
+                    onClick={() => {
+                      router.replace({ query: { viewDetail: row.uid } });
+                    }}
+                  >
+                    See Reservations
+                  </Button>
                 </TableCell>
                 <TableCell align="right">
                   {row.isManager ? "Yes" : "No"}
@@ -104,6 +116,16 @@ const ManageUser = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {userViewDetail && (
+        <TriggerUserReservation
+          open={Boolean(userViewDetail)}
+          email={userViewDetail.email}
+          userId={userViewDetail.uid}
+          onClose={() => {
+            router.replace({ query: {} });
+          }}
+        />
+      )}
     </AdminLayout>
   );
 };

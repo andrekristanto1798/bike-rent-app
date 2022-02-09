@@ -121,7 +121,9 @@ const ManageBikeById = ({ bikeId, bike }) => {
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        <Link href={`/admin/manage-user/${row.user?.id}`}>
+                        <Link
+                          href={`/admin/manage-user?viewDetail=${row.user?.id}`}
+                        >
                           {row.user?.email}
                         </Link>
                       </TableCell>

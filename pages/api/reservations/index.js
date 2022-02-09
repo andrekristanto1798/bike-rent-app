@@ -72,12 +72,7 @@ handler.get(validate({ query: getReservationSchema })).get(async (req, res) => {
 
   if (req.user.isManager && req.query.userId) {
     // only allow manager to query by user
-    let user = await auth.getUser(req.query.userId);
-    if (!user.exists) {
-      return res.status(400).json({
-        error: `User ${req.query.userId} cannot be found!`,
-      });
-    }
+    await auth.getUser(req.query.userId);
     query = query.where("userId", "==", req.query.userId);
   } else {
     // for non-manager use current user id (or when userId is not provided)
@@ -88,17 +83,13 @@ handler.get(validate({ query: getReservationSchema })).get(async (req, res) => {
 
   let reservations = snapshotToArray(snapshot);
 
-  if (!req.user.isManager) {
-    // normal user needs bike details
-    const promises = reservations.map(async (reservation) => {
-      const bikeSnapshot = await BikeCollections()
-        .doc(reservation.bikeId)
-        .get();
-      if (!bikeSnapshot.exists) return null;
-      return { ...reservation, bike: bikeSnapshot.data() };
-    });
-    reservations = await Promise.all(promises);
-  }
+  const promises = reservations.map(async (reservation) => {
+    const bikeSnapshot = await BikeCollections().doc(reservation.bikeId).get();
+    if (!bikeSnapshot.exists) return null;
+    return { ...reservation, bike: bikeSnapshot.data() };
+  });
+
+  reservations = await Promise.all(promises);
 
   reservations = reservations
     .filter(Boolean) // filter falsy reservation due to deleted bike

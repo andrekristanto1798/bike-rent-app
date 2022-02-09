@@ -4,6 +4,29 @@ import { LocationOn } from "@mui/icons-material";
 import Link from "@/components/Link";
 import DotColor from "@/components/DotColor";
 
+const ONE_DAY = 24 * 60 * 60 * 1000;
+
+const StatusText = {
+  Future: "(Future)",
+  Ongoing: "(Ongoing)",
+  Cancelled: "(Cancelled)",
+  Expired: "(Expired)",
+};
+
+const getStatusText = (status, startTime, endTime) => {
+  if (status === "ACTIVE" && startTime > Date.now()) {
+    return StatusText.Future;
+  }
+  if (
+    status === "ACTIVE" &&
+    startTime <= Date.now() &&
+    endTime + ONE_DAY >= Date.now()
+  ) {
+    return StatusText.Ongoing;
+  }
+  return status === "CANCELLED" ? StatusText.Cancelled : StatusText.Expired;
+};
+
 function ReservationCard({
   viewMode,
   reservation: {
@@ -20,10 +43,11 @@ function ReservationCard({
   bikePrefixURL = "/rent-bike",
 }) {
   const { model, color, location } = bike || {};
+  const statusText = getStatusText(status, startTime, endTime);
   const isExpired =
-    (startTime <= Date.now() && endTime <= Date.now()) ||
+    // at least give 1 day distance
+    (startTime + ONE_DAY <= Date.now() && endTime + ONE_DAY <= Date.now()) ||
     status === "CANCELLED";
-  const expiredText = status === "CANCELLED" ? "(Cancelled)" : "(Expired)";
   return (
     <Paper
       key={id}
@@ -44,10 +68,14 @@ function ReservationCard({
             background: "darkgray",
             color: "white",
           }),
+          ...(statusText === StatusText.Ongoing && {
+            background: "seagreen",
+            color: "white",
+          }),
         }}
       >
         <Typography>
-          {isExpired && expiredText} {startDate} - {endDate}
+          {statusText} {startDate} - {endDate}
         </Typography>
         <Typography
           sx={{ display: "flex", alignItems: "center" }}
@@ -64,11 +92,18 @@ function ReservationCard({
         </Typography>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Link href={`${bikePrefixURL}/${bikeId}`}>
-            <Button type="text" sx={{ ...(isExpired && { color: "white" }) }}>
+            <Button
+              type="text"
+              sx={{
+                ...((isExpired || statusText === StatusText.Ongoing) && {
+                  color: "white",
+                }),
+              }}
+            >
               View Bike Details
             </Button>
           </Link>
-          {!isExpired && !viewMode && (
+          {statusText === "(Future)" && !viewMode && (
             <Button onClick={onCancel}>Cancel Reservation</Button>
           )}
         </Box>

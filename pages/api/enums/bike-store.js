@@ -1,6 +1,9 @@
 import nextConnect from "next-connect";
 import { snapshotToArray, StoreCollections } from "@/utils/db";
 import { onError } from "@/api-lib/ncOnError";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError });
 

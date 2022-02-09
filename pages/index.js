@@ -110,7 +110,7 @@ export const getServerSideProps = withAuthSSR(
     const searchParams = new URLSearchParams(userQuery).toString();
     const { bikes } = await fetchWithToken(`/api/bikes?${searchParams}`);
     return {
-      props: { currentUser, bikes, ...userQuery },
+      props: { currentUser, bikes: bikes || [], ...userQuery },
     };
   }
 );

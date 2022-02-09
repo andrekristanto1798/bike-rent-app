@@ -1,7 +1,4 @@
 import { verifyIdToken } from "next-firebase-auth";
-import initAuth from "@/utils/initAuth";
-
-initAuth();
 
 const withAuthMiddleware = () => async (req, res, next) => {
   if (!(req.headers && req.headers.authorization)) {

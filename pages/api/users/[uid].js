@@ -5,6 +5,9 @@ import withManagerMiddleware from "@/api-lib/withManagerMiddleware";
 import validate from "@/api-lib/validation";
 import { onError } from "@/api-lib/ncOnError";
 import { auth } from "@/utils/db";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError })
   .use(withAuthMiddleware())

@@ -16,15 +16,18 @@ const RentBikeById = ({ bikeId, bike, startDate, endDate }) => {
   const [reserved, setReserved] = useState(false);
   const { fetchWithToken } = useCurrentUser();
   const { enqueueSnackbar } = useSnackbar();
-  const title = bike.model ? `Rent Bike ${bike.model}` : `Rent Bike`;
-  return (
-    <UserLayout title={title}>
-      {bike === null && (
+  if (!bike.model) {
+    return (
+      <UserLayout title={`Rent Bike`}>
         <Typography variant="h6">
           Sorry Your Bike is not available for viewing.&nbsp;
           <Link href="/">Go back to Home now</Link>
         </Typography>
-      )}
+      </UserLayout>
+    );
+  }
+  return (
+    <UserLayout title={`Rent Bike ${bike.model}`}>
       <Box>
         <Typography>Model: {bike.model}</Typography>
         <Typography>Location: {bike.location}</Typography>
@@ -114,7 +117,7 @@ export const getServerSideProps = withAuthSSR(
       props: {
         bikeId: query.id,
         currentUser,
-        bike,
+        bike: bike || {},
         startDate:
           formatYYYYMMDD(query.startDate) || formatYYYYMMDD(new Date()),
         endDate: formatYYYYMMDD(query.endDate) || formatYYYYMMDD(new Date()),

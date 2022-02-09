@@ -2,6 +2,9 @@ import nextConnect from "next-connect";
 import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
 import { onError } from "@/api-lib/ncOnError";
 import { ReservationCollections, RESERVATION_ENUM } from "@/utils/db";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 

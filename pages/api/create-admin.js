@@ -3,6 +3,9 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import withAuthMiddleware from "@/api-lib/withAuthMiddleware";
 import withManagerMiddleware from "@/api-lib/withManagerMiddleware";
 import { onError } from "@/api-lib/ncOnError";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError })
   .use(withAuthMiddleware())

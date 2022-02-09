@@ -135,7 +135,7 @@ export const getServerSideProps = withAuthSSR(
   async ({ currentUser, fetchWithToken }) => {
     const { users } = await fetchWithToken(`/api/users`);
     return {
-      props: { currentUser, users },
+      props: { currentUser, users: users || [] },
     };
   }
 );

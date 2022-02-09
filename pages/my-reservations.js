@@ -57,7 +57,7 @@ export const getServerSideProps = withAuthSSR(
     }
     const { reservations } = await fetchWithToken(`/api/reservations`);
     return {
-      props: { currentUser, reservations },
+      props: { currentUser, reservations: reservations || [] },
     };
   }
 );

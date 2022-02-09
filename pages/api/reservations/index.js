@@ -11,6 +11,9 @@ import {
   RESERVATION_ENUM,
 } from "@/utils/db";
 import { formatYYYYMMDD } from "@/utils/date";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 
@@ -21,16 +24,17 @@ const getReservationSchema = joi.object({
 
 const createReservationSchema = joi.object({
   bikeId: joi.string().required(),
+  // minimum `startDate` is today's date
   startDate: joi
     .date()
-    .greater(Date.now())
+    .min(formatYYYYMMDD(Date.now()))
     .required()
     .error((errors) => {
       errors.forEach((err) => {
-        const tmr = formatYYYYMMDD(Date.now() + 1);
+        const today = formatYYYYMMDD(Date.now());
         switch (err.code) {
-          case "date.greater":
-            err.message = `Earliest start date for reservation is ${tmr}`;
+          case "date.min":
+            err.message = `Earliest start date for reservation is ${today}`;
             break;
           default:
             break;

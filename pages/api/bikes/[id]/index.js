@@ -14,6 +14,9 @@ import {
   snapshotToArray,
   StoreCollections,
 } from "@/utils/db";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 

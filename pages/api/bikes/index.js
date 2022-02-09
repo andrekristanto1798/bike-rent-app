@@ -16,6 +16,9 @@ import {
   getAvgRating,
 } from "@/utils/db";
 import { FieldPath } from "firebase-admin/firestore";
+import initAuth from "@/utils/initAuth";
+
+initAuth();
 
 const handler = nextConnect({ onError }).use(withAuthMiddleware());
 

@@ -28,9 +28,9 @@ To login, open `http://localhost:3000/login`
 - `/rent-bike/[id]` - Rent Bike page + Rate Bike
 - `/my-reservations` - View + cancel reservations
 
-## Deployment on Vercel
+## Deployment on Heroku
 
-URL: https://bike-rent-app-nine.vercel.app/
+URL: https://arcane-garden-52011.herokuapp.com/
 
 ## Firebase Management
 

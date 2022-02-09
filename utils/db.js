@@ -1,8 +1,21 @@
 import joi from "joi";
-import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
+import fb from "firebase-admin";
 
-const db = getFirestore();
+export const firebase = !fb.apps.length
+  ? fb.initializeApp({
+      credential: fb.credential.cert({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY
+          ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+          : undefined,
+      }),
+      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+    })
+  : fb.app();
+
+export const db = fb.firestore();
+export const auth = fb.auth();
 
 export const snapshotToArray = (snapshot) => {
   const data = [];
@@ -19,8 +32,6 @@ export const BikeCollections = () => db.collection("bikes");
 export const ReservationCollections = () => db.collection("reservations");
 export const RatingCollections = (bikeId) =>
   db.collection("bikes").doc(bikeId).collection("ratings");
-
-export const auth = getAuth();
 
 export const getAvgRating = async (bikeId) => {
   const ratings = await RatingCollections(bikeId).get();

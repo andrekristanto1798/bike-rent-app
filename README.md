@@ -30,7 +30,7 @@ To login, open `http://localhost:3000/login`
 
 ## Deployment on Vercel
 
-TODO
+URL: https://bike-rent-app-nine.vercel.app/
 
 ## Firebase Management
 
